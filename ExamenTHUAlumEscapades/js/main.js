@@ -5,6 +5,9 @@ let escapades = JSON.parse(localStorage.getItem('escapades')) || {};
 async function main(){
      carregarEscapadesLS()
      llistarEscapades()
+
+     document.getElementById("filtrar").addEventListener("click", validar,false);
+
 }
 
 async function carregarEscapadesLS(){
@@ -19,6 +22,82 @@ async function carregarEscapadesLS(){
         console.error('Error:', error);
     }
 }
+
+
+
+function validar (e) {
+    esborrarError ();
+    if (validarDesde() && validarHasta() && validarHastaDesde() && confirm("Confirma si vols enviar el formulari") ){
+
+        return true;
+
+    }else{
+        e.preventDefault();
+        return false;
+    }
+}
+
+function validarDesde(){
+    var element = document.getElementById("temporadaDesde");
+    if (!element.checkValidity()){
+        if (element.validity.valueMissing){
+            error(element,"Deus d'introduïr un temporada(any).");
+        }
+        if (element.validity.patternMismatch){
+            error(element,"La temporada te de ser apartir de 2000.");
+        }
+        //error(element);
+        return false;
+    }
+    return true;
+}
+
+function validarHasta(){
+    
+    var element = document.getElementById("temporadaHasta");
+    if (!element.checkValidity()){
+        if (element.validity.valueMissing){
+            error(element,"Deus d'introduïr un temporada(any).");
+        }
+        if (element.validity.patternMismatch){
+            error(element,"La temporada hasta te de ser apartir de 2000.");
+        }
+        //error(element);
+        return false;
+    }
+    return true;
+}
+
+function validarHastaDesde(){
+    var hasta = document.getElementById("temporadaHasta");
+    var desde = document.getElementById("temporadaDesde");
+
+    if (hasta.value !== "" && desde.value !== "") {
+        if (Number(hasta.value) < Number(desde.value)) {
+            error(hasta, "Hasta no pot ser menor que desde.");
+            return false;
+        }
+    }
+    return true;
+}
+
+
+function error (element, missatge){
+    let miss=document.createTextNode(missatge);    
+    document.getElementById("errorMensaje").appendChild(miss);
+    element.classList.add("error");
+    element.focus();
+}
+
+
+function esborrarError (){
+    document.getElementById("errorMensaje").textContent="";
+    let formulari = document.forms[0];
+        for ( let i=0; i < formulari.elements.length; i++){
+            formulari.elements[i].classList.remove("error");
+        }
+}
+
 
 function llistarEscapades(){
 
