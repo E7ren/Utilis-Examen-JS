@@ -7,6 +7,11 @@ async function main(){
      llistarEscapades()
 
      document.getElementById("filtrar").addEventListener("click", validar,false);
+     document.getElementById("eliminarFiltro").addEventListener("click", borrarFilteres)
+
+     document.getElementById("precioAlto"). addEventListener("click", preuAlt);
+     document.getElementById("precioBajo"). addEventListener("click", preuBaix);
+     document.getElementById("relevancia"). addEventListener("click", relevancia);
 
 }
 
@@ -23,12 +28,60 @@ async function carregarEscapadesLS(){
     }
 }
 
+function filtrarArray(){
+
+    var hastaha = document.getElementById("temporadaHasta");
+    var desdeha = document.getElementById("temporadaDesde");
+    var hastate = document.getElementById("temporadaHasta");
+    var desdete = document.getElementById("temporadaDesde");
+
+    escapades.escapades.filter((a,b) => b.precio - a.precio);
+
+
+}
+function borrarFilteres(){
+
+    const desdeTemp = document.getElementById("temporadaDesde");
+    const hastaTemp = document.getElementById("temporadaHasta");
+    const desdeDura = document.getElementById("duracionDesde");
+    const hastaDura = document.getElementById("duracionHasta");
+    
+    while (desdeTemp.firstChild) {
+        desdeTemp.removeChild(desdeTemp.firstChild);
+    }
+    while (hastaTemp.firstChild) {
+        hastaTemp.removeChild(hastaTemp.firstChild);
+    }
+    while (desdeDura.firstChild) {
+        desdeDura.removeChild(desdeDura.firstChild);
+    }
+    while (hastaDura.firstChild) {
+        hastaDura.removeChild(hastaDura.firstChild);
+    }
+    alert(funsaina);
+}
+function preuAlt(){
+
+    escapades.escapades.sort((a,b) => b.precio - a.precio);
+    llistarEscapades();
+}
+function preuBaix(){
+
+    escapades.escapades.sort((a,b) => a.precio - b.precio);
+    llistarEscapades();
+
+}
+function relevancia(){
+
+    escapades.escapades = [...dadesGuardades];
+    llistarEscapades();
+}
 
 
 function validar (e) {
     esborrarError ();
-    if (validarDesde() && validarHasta() && validarHastaDesde() && confirm("Confirma si vols enviar el formulari") ){
-
+    if (validarDesdeTemporada() && validarHastaTemporada() && validarHastaDesdeTemporada() && validarDesdeDuracio() && validarHastaDuracio() && confirm("Confirma si vols enviar el formulari") ){
+        filtrarArray();
         return true;
 
     }else{
@@ -37,7 +90,52 @@ function validar (e) {
     }
 }
 
-function validarDesde(){
+function validarDesdeDuracio(){
+    var element = document.getElementById("duracionDesde");
+    if (!element.checkValidity()){
+        if (element.validity.valueMissing){
+            error(element,"Deus d'introduïr un dia.");
+        }
+        if (element.validity.patternMismatch){
+            error(element,"Escribe un número de días.");
+        }
+        //error(element);
+        return false;
+    }
+    return true;
+}
+
+function validarHastaDuracio(){
+    
+    var element = document.getElementById("duracionHasta");
+    if (!element.checkValidity()){
+        if (element.validity.valueMissing){
+            error(element,"Deus d'introduïr un dia.");
+        }
+        if (element.validity.patternMismatch){
+            error(element,"te de ser un dia valid.");
+        }
+        //error(element);
+        return false;
+    }
+    return true;
+}
+
+function validarHastaDesdeTemporada(){
+    var hasta = document.getElementById("temporadaHasta");
+    var desde = document.getElementById("temporadaDesde");
+
+    if (hasta.value !== "" && desde.value !== "") {
+        if (Number(hasta.value) < Number(desde.value)) {
+            error(hasta, "Hasta no pot ser menor que desde.");
+            return false;
+        }
+    }
+    return true;
+}
+
+
+function validarDesdeTemporada(){
     var element = document.getElementById("temporadaDesde");
     if (!element.checkValidity()){
         if (element.validity.valueMissing){
@@ -52,7 +150,7 @@ function validarDesde(){
     return true;
 }
 
-function validarHasta(){
+function validarHastaTemporada(){
     
     var element = document.getElementById("temporadaHasta");
     if (!element.checkValidity()){
@@ -68,7 +166,7 @@ function validarHasta(){
     return true;
 }
 
-function validarHastaDesde(){
+function validarHastaDesdeTemporada(){
     var hasta = document.getElementById("temporadaHasta");
     var desde = document.getElementById("temporadaDesde");
 
