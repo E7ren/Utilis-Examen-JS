@@ -1,49 +1,174 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ca">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vallidació de formulari amb HTML5 i JS</title>
-    <script type="text/javascript"src="ValidacioHTML5iJS.js"></script>
-    <style> .error {
-        border:solid 2px #FF0000; 
-}
- </style>
+    <title>Validació de formulari amb HTML5 i JS</title>
+    <script type="text/javascript" src="ValidacioHTML5iJS.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 30px auto; padding: 0 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 8px 4px; vertical-align: top; }
+        td:first-child { width: 180px; font-weight: bold; padding-top: 10px; }
+        input, select, textarea {
+            width: 100%; padding: 6px 8px; box-sizing: border-box;
+            border: 1px solid #ccc; border-radius: 4px;
+        }
+        .error { border: solid 2px #FF0000; }
+        #missatgeError { color: red; font-weight: bold; margin-top: 10px; }
+        small { color: #666; display: block; margin-top: 2px; font-size: 0.8em; }
+    </style>
 </head>
 <body>
-    <head>
-        <title>Formulari HTML5 i JS</title>
-    </head>
-    <form action="procesar.php" method="post" id=elFormulari">
+    <h2>Formulari de validació HTML5 + JS</h2>
+    <form action="procesar.php" method="post" id="elFormulari">
         <table>
+
+            <!-- NOM: text, entre 2 i 14 lletres -->
             <tr>
-                <td> Nom: </td> 
+                <td>Nom:</td>
                 <td>
-                    <input type="text" name="nom" id="nom" maxlength="15" pattern="[A-Za-z\s]{2,15}" title="Introdueix entre 2 i 15 lletres" required/>
+                    <input type="text" name="nom" id="nom"
+                        pattern="[A-Za-zÀ-ÿ\s]{2,14}"
+                        maxlength="14"
+                        title="Entre 2 i 14 caràcters, només lletres"
+                        required />
+                    <small>Pattern: [A-Za-zÀ-ÿ\s]{2,14}</small>
                 </td>
             </tr>
-            <tr>   
-                <td> data neixement: </td> 
-                <td>
-                    <input type="date" name="neix" id="neix" step="1" min="1900-01-01" max="2021-12-31" required/>
-                </td>
-            </tr>
+
+            <!-- DATA NAIXEMENT: date, entre 1900 i 2020 -->
             <tr>
-                <td> telèfon: </td> 
+                <td>Data naixement:</td>
                 <td>
-                    <input type="text" name="tel" id="tel" pattern="^\d{3}\s\d{3}\s\d{3}$" title="El telefono ha de ser amb el següent  format 999 999 999" required/>
+                    <input type="date" name="neix" id="neix"
+                        min="1900-01-01"
+                        max="2020-12-31"
+                        required />
+                    <small>min="1900-01-01" max="2020-12-31"</small>
                 </td>
             </tr>
+
+            <!-- TELÈFON: format 999 999 999 -->
+            <tr>
+                <td>Telèfon:</td>
+                <td>
+                    <input type="tel" name="tel" id="tel"
+                        pattern="[0-9]{3} [0-9]{3} [0-9]{3}"
+                        title="Format: 999 999 999"
+                        required />
+                    <small>Pattern: [0-9]{3} [0-9]{3} [0-9]{3}</small>
+                </td>
+            </tr>
+
+            <!-- EMAIL: format estàndard -->
+            <tr>
+                <td>Email:</td>
+                <td>
+                    <input type="email" name="email" id="email"
+                        required />
+                    <small>type="email" — validació nativa del navegador</small>
+                </td>
+            </tr>
+
+            <!-- EDAT: número entre 18 i 99 -->
+            <tr>
+                <td>Edat:</td>
+                <td>
+                    <input type="number" name="edat" id="edat"
+                        min="18"
+                        max="99"
+                        step="1"
+                        required />
+                    <small>min="18" max="99" step="1"</small>
+                </td>
+            </tr>
+
+            <!-- PAÍS: select desplegable -->
+            <tr>
+                <td>País:</td>
+                <td>
+                    <select name="pais" id="pais" required>
+                        <option value="">-- Tria un país --</option>
+                        <option value="es">Espanya</option>
+                        <option value="fr">França</option>
+                        <option value="it">Itàlia</option>
+                        <option value="de">Alemanya</option>
+                    </select>
+                    <small>select amb value="" buit com a opció per defecte</small>
+                </td>
+            </tr>
+
+            <!-- PASSWORD: mínim 8 cars, lletra + número -->
+            <tr>
+                <td>Contrasenya:</td>
+                <td>
+                    <input type="password" name="password" id="password"
+                        minlength="8"
+                        pattern="(?=.*[A-Za-z])(?=.*\d).{8,}"
+                        title="Mínim 8 caràcters, almenys una lletra i un número"
+                        required />
+                    <small>Pattern: (?=.*[A-Za-z])(?=.*\d).{8,} — mínim 8 cars, 1 lletra i 1 número</small>
+                </td>
+            </tr>
+
+            <!-- CONFIRMAR PASSWORD: ha de coincidir -->
+            <tr>
+                <td>Confirma contrasenya:</td>
+                <td>
+                    <input type="password" name="confirmPassword" id="confirmPassword"
+                        required />
+                    <small>Validació cruzada per JS — ha de coincidir amb el camp anterior</small>
+                </td>
+            </tr>
+
+            <!-- URL: format https://... -->
+            <tr>
+                <td>Web:</td>
+                <td>
+                    <input type="url" name="web" id="web"
+                        placeholder="https://exemple.com"
+                        required />
+                    <small>type="url" — validació nativa del navegador</small>
+                </td>
+            </tr>
+
+            <!-- TEXTAREA: entre 10 i 200 caràcters -->
+            <tr>
+                <td>Comentari:</td>
+                <td>
+                    <textarea name="comentari" id="comentari"
+                        minlength="10"
+                        maxlength="200"
+                        rows="4"
+                        required></textarea>
+                    <small>minlength="10" maxlength="200"</small>
+                </td>
+            </tr>
+
+            <!-- CHECKBOX: acceptar termes -->
+            <tr>
+                <td>Termes i condicions:</td>
+                <td>
+                    <label>
+                        <input type="checkbox" name="termes" id="termes" required />
+                        Accepto els termes i condicions
+                    </label>
+                    <small>checkbox — validat per JS amb .checked</small>
+                </td>
+            </tr>
+
+            <!-- BOTONS -->
             <tr>
                 <td>&nbsp;</td>
-                 <td>
-                <input type="reset" name="limpiar" id="limpiar" value="Reset"/>
-               <input type="submit" name="enviar" id="enviar" value="Enviar"/> </td>
+                <td>
+                    <input type="reset" name="limpiar" id="limpiar" value="Reset" style="width:auto; margin-right:8px;" />
+                    <input type="submit" name="enviar" id="enviar" value="Enviar" style="width:auto;" />
+                </td>
             </tr>
-            
+
         </table>
         <p id="missatgeError"></p>
     </form>
-    
 </body>
 </html>

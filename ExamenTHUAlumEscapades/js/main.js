@@ -7,7 +7,7 @@ async function main(){
      llistarEscapades()
 
      document.getElementById("filtrar").addEventListener("click", validar,false);
-     document.getElementById("eliminarFiltro").addEventListener("click", borrarFilteres)
+     document.getElementById("eliminarFiltro").addEventListener("submit", relevancia)
 
      document.getElementById("precioAlto"). addEventListener("click", preuAlt);
      document.getElementById("precioBajo"). addEventListener("click", preuBaix);
@@ -28,17 +28,24 @@ async function carregarEscapadesLS(){
     }
 }
 
-function filtrarArray(){
+function filtrarArray() {
+    const desdeTemp = document.getElementById("temporadaDesde").value;
+    const hastaTemp = document.getElementById("temporadaHasta").value;
+    const desdeDura = document.getElementById("duracionDesde").value;
+    const hastaDura = document.getElementById("duracionHasta").value;
 
-    var hastaha = document.getElementById("temporadaHasta");
-    var desdeha = document.getElementById("temporadaDesde");
-    var hastate = document.getElementById("temporadaHasta");
-    var desdete = document.getElementById("temporadaDesde");
+    escapades.escapades = dadesGuardades.filter(e => {
+        let ok = true;
+        if (desdeTemp) ok = ok && Number(e.temporada) >= Number(desdeTemp);
+        if (hastaTemp) ok = ok && Number(e.temporada) <= Number(hastaTemp);
+        if (desdeDura) ok = ok && Number(e.duracion)  >= Number(desdeDura);
+        if (hastaDura) ok = ok && Number(e.duracion)  <= Number(hastaDura);
+        return ok;
+    });
 
-    escapades.escapades.filter((a,b) => b.precio - a.precio);
-
-
+    llistarEscapades();
 }
+
 function borrarFilteres(){
 
     const desdeTemp = document.getElementById("temporadaDesde");
@@ -81,6 +88,7 @@ function relevancia(){
 function validar (e) {
     esborrarError ();
     if (validarDesdeTemporada() && validarHastaTemporada() && validarHastaDesdeTemporada() && validarDesdeDuracio() && validarHastaDuracio() && confirm("Confirma si vols enviar el formulari") ){
+        e.preventDefault();
         filtrarArray();
         return true;
 
