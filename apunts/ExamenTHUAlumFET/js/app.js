@@ -288,11 +288,11 @@ function esborrarError() {
 function plenarAnos() {
 
     let desde = document.getElementById('anyoDesde');
-    let fins  = document.getElementById('anyoHasta');
+
 
     if (!cotxes.cars) return;
     desde.innerHTML = '';
-    fins.innerHTML = '';
+
 
     // 1. Extraer años
     let anys = cotxes.cars.map(c => c.anyo);
