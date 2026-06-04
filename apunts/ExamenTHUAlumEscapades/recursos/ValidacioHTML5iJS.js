@@ -345,6 +345,7 @@ function obtenirEstilsUnics() {
 // -------------------------------------------------------
 function comptarPerRegimen(regimen) {
     return escapades.filter(e => e.regimen === regimen).length;
+    escapades.find
 }
 // Ús: comptarPerRegimen("Media pensión")  →  2
 

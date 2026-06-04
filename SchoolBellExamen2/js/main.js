@@ -1,16 +1,17 @@
 document.addEventListener('DOMContentLoaded', main);
 
-let datos   = JSON.parse(localStorage.getItem('schedules')) || {};
+let datos   = JSON.parse(localStorage.getItem('baseDades')) || {};
 let times = JSON.parse(localStorage.getItem('schedules')) || {};
 let songs = JSON.parse(localStorage.getItem('Playlists')) || {}; 
 
 
 async function main(){
 
+     plenarCansons()
      carregarTimbres()
      dibuixarTaula()
      document.getElementById("filtrar").addEventListener("click", validar);
-     plenarCansons()
+
      
 
 }
@@ -83,7 +84,11 @@ async function carregarPlaylists(){
 function dibuixarTaula(){
 
     const listado = document.getElementById("listado");
-    
+
+    while (listado.firstChild) {
+        listado.removeChild(listado.firstChild);
+    }
+
     times.times.forEach(element => {
 
         const tableRow = document.createElement("tr")
@@ -107,8 +112,19 @@ function dibuixarTaula(){
         tableRow.appendChild(tdSegs)
         
         const tdCancion = document.createElement("td")
-        tdCancion.textContent = element.tdCancion
+        nomCancion = songs.songs.find(c => c.id === element.songId).name
+        tdCancion.textContent = nomCancion
         tableRow.appendChild(tdCancion);
+
+        const columnaBorrar = document.createElement("td")
+        tableRow.appendChild(columnaBorrar)
+
+        const botoBorrar = document.createElement("button")
+        botoBorrar.classList.add("btn")
+        botoBorrar.textContent = "Borrar"
+        botoBorrar.addEventListener("click", () => Borrar(element.id))
+
+        columnaBorrar.appendChild(botoBorrar)
     });
 
     songs.songs.forEach(element => {
@@ -117,15 +133,29 @@ function dibuixarTaula(){
         canicionName.textContent = element.name
         tableRow.appendChild(canicionName)
 
-        
     });
 
+}
 
-        
+function anyadirMomento (e){
+    const id = times.times.length > 0 ? Math.max(...times.times.map(t => t.id)) + 1 : 1;
+    const name = document.getElementById("timeName").value;
+    const hour = document.getElementById("timeHour").value;
+    const duration = parseInt(document.getElementById("timeDuration").value);
+    const songId = songs.songs.find(c => c.name === document.getElementById("timeSongSelect").value).id;
 
+    const nuevoMomento = { id, name, hour, duration, songId };
+    times.times.push(nuevoMomento);
+    localStorage.setItem('schedules', JSON.stringify(times));
+    dibuixarTaula();
+    
+    document.getElementById("timeForm").reset();
+}
 
-
-
+function Borrar (id){
+    times.times = times.times.filter(t => t.id !== id);
+    localStorage.setItem('schedules', JSON.stringify(times));
+    dibuixarTaula();
 }
 
 
@@ -198,6 +228,7 @@ function validar (e) {
         validarhor () &&
         confirm("Confirma si vols enviar el formulari")
     ){
+        anyadirMomento(e);
         return true;
 
     }else{
