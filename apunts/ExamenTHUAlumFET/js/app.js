@@ -6,6 +6,7 @@ async function main(){
     await carrgarCochesLS();
     plenarAnos();
     llistarCoches();
+    autocompletar();
 
     let filtre = document.getElementById('filtrar')
     let formFiltre = filtre.closest('form'); //buscar el pare en la etiqueta form de el boto submit
@@ -15,6 +16,7 @@ async function main(){
     document.getElementById('precioAlto').addEventListener('click', preuAlt);
     document.getElementById('precioBajo').addEventListener('click', preuBaix);
     document.getElementById('relevancia').addEventListener('click', relevancia);
+    document.getElementById('ir').addEventListener('click', buscarCoche);
 }
 
 function filtrar(){
@@ -347,10 +349,53 @@ function validarkilometros(){
 }
 
 function autocompletar(){
-
-    var avaiableTags = [...cotxes];$("#tags").autocomplete({
-
+    if (!cotxes.cars) return;
+    
+    // Crear array con marcas y modelos
+    let availableTags = [];
+    
+    cotxes.cars.forEach(car => {
+        // Agregar marca si no existe
+        if (!availableTags.includes(car.marca)) {
+            availableTags.push(car.marca);
+        }
+        // Agregar modelo si no existe
+        if (!availableTags.includes(car.modelo)) {
+            availableTags.push(car.modelo);
+        }
+        // Agregar marca + modelo completo
+        let nombreCompleto = car.marca + " " + car.modelo;
+        if (!availableTags.includes(nombreCompleto)) {
+            availableTags.push(nombreCompleto);
+        }
     });
 
+    // Aplicar autocompletado al input
+    $("#marcaModelo").autocomplete({
+        source: availableTags,
+        minLength: 2
+    });
+}
 
+function buscarCoche() {
+    let busqueda = document.getElementById('marcaModelo').value.trim().toLowerCase();
+    
+    if (busqueda === '') {
+        cotxes.cars = [...dadesGuardades];
+        llistarCoches();
+        return;
+    }
+    
+    // Filtrar coches que coincidan con la búsqueda
+    cotxes.cars = dadesGuardades.filter(car => {
+        let marca = car.marca.toLowerCase();
+        let modelo = car.modelo.toLowerCase();
+        let nombreCompleto = (marca + " " + modelo).toLowerCase();
+        
+        return marca.includes(busqueda) || 
+               modelo.includes(busqueda) || 
+               nombreCompleto.includes(busqueda);
+    });
+    
+    llistarCoches();
 }
