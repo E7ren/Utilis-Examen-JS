@@ -37,7 +37,7 @@
                     <form id="timeForm" class="row g-3">
                         <div class="col-md-4">
                             <label class="form-label">Nombre Momento</label>
-                            <input type="text" id="timeName" class="form-control" placeholder="Ej: Patio" >
+                            <input type="text" id="timeName" class="form-control" placeholder="Ej: Patio" pattern="[A-Za-zÀ-ÿ\s]{2,14}" required >
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Hora</label>
@@ -53,14 +53,23 @@
                                 </select>
                         </div>
                         <div class="col-12">
-                            <button type="submit" class="btn btn-success">Asignar a Horario Actual</button>
+                            <p id="missatgeError"></p>
+                            <button type="submit" class="btn btn-dark flex-sm-fill" id="filtrar">Assignar horario Actual</button>
                         </div>
                     </form>
                 </div>
             </div>
-        <div class="taula">
+        <table  class="table table-striped">
+            <thead>
+                <th>id</th>
+                <th>Nombre</th>
+                <th>Hora</th>
+                <th>Segs</th>
+                <th>Cancion</th>
+            </thead>
+            <tbody id="listado"> </tbody>
 
-        </div>
+        </table>
 </div>
 </body>
 </html>
